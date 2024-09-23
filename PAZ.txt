@@ -1,0 +1,95 @@
+local teleportPosition = Vector3.new(-10471.5556640625, 45357.9140625, 11461.9326171875)
+
+local function teleportPlayer()
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+
+    if character then
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+        humanoidRootPart.CFrame = CFrame.new(teleportPosition)
+    end
+end
+
+teleportPlayer()
+
+local basePosition = Vector3.new(-11350.4326171875, 45354.9453125, 10553.8623046875)
+local size = Vector3.new(2000, 1, 2000) 
+local imageId = "rbxassetid://81115182492886"
+local skyImageId = "rbxassetid://81115182492886"
+local musicId = "rbxassetid://9046476113"
+
+local function createFloor()
+    local floor = Instance.new("Part")
+    floor.Size = size
+    floor.Anchored = true
+    floor.Position = basePosition + Vector3.new(size.X / 2, -size.Y / 2, size.Z / 2)
+    floor.Material = Enum.Material.SmoothPlastic
+
+    local texture = Instance.new("Decal")
+    texture.Texture = imageId
+    texture.Face = Enum.NormalId.Top
+    texture.Parent = floor
+
+    floor.Parent = workspace
+end
+
+local function createSky()
+    local sky = Instance.new("Sky")
+    sky.SkyboxBk = skyImageId
+    sky.SkyboxDn = skyImageId
+    sky.SkyboxFt = skyImageId
+    sky.SkyboxLf = skyImageId
+    sky.SkyboxRt = skyImageId
+    sky.SkyboxUp = skyImageId
+    sky.Parent = game:GetService("Lighting")
+end
+
+local function displayText()
+    local player = game.Players.LocalPlayer
+    local screenGui = Instance.new("ScreenGui")
+    local textLabel = Instance.new("TextLabel")
+
+    screenGui.Parent = player:WaitForChild("PlayerGui")
+
+    textLabel.Size = UDim2.new(0.5, 0, 0.1, 0)
+    textLabel.Position = UDim2.new(0.25, 0, 0.1, 0)
+    textLabel.Text = "The Universe"
+    textLabel.TextScaled = true
+    textLabel.BackgroundTransparency = 1
+    textLabel.TextColor3 = Color3.new(1, 1, 1)
+    textLabel.Font = Enum.Font.SourceSansBold
+
+    textLabel.Parent = screenGui
+
+    wait(3)
+    screenGui:Destroy()
+end
+
+local function playMusic()
+    local sound = Instance.new("Sound")
+    sound.SoundId = musicId
+    sound.Volume = 1
+    sound.Looped = true
+    sound.Parent = workspace
+
+    sound:Play()
+end
+
+local function setNightTimeLoop()
+    while true do
+        local lighting = game:GetService("Lighting")
+        lighting.TimeOfDay = "00:00:00"
+        lighting.Brightness = 0.2 
+        wait(0.01) 
+    end
+end
+
+local function initializeScene()
+    createFloor()
+    createSky()
+    displayText()
+    playMusic()
+    setNightTimeLoop()
+end
+
+initializeScene()
